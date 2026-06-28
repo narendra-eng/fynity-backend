@@ -48,6 +48,13 @@ class User(db.Model):
         nullable=False
     )
 
+    clients = db.relationship(
+    "Client",
+    backref="user",
+    lazy=True,
+    cascade="all, delete-orphan"
+)
+
     # ── Helper methods ──────────────────────────────────────────────
 
     def set_password(self, plain_password: str) -> None:

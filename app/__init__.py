@@ -11,6 +11,7 @@ def create_app():
     jwt.init_app(app)
 
     from app.models.user import User
+    from app.models.client import Client
 
     from app.routes.auth_routes import auth_bp
     from app.routes.user_routes import user_bp
