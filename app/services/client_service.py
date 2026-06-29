@@ -48,3 +48,78 @@ def create_client(
             "success": False,
             "message": "Failed to create client."
         }
+    
+    
+def get_all_clients() -> dict:
+    clients = Client.query.all()
+
+    return {
+        "success": True,
+        "count": len(clients),
+        "clients": [client.to_dict() for client in clients]
+    }
+    
+
+def get_client_by_id(client_id: str) -> dict:
+    client = Client.query.get(client_id)
+
+    if not client:
+        return {
+            "success": False,
+            "message": "Client not found."
+        }
+
+    return {
+        "success": True,
+        "client": client.to_dict()
+    }
+
+def update_client(client_id: str, data: dict) -> dict:
+    client = Client.query.get(client_id)
+
+    if not client:
+        return {
+            "success": False,
+            "message": "Client not found."
+        }
+
+    if "company_name" in data:
+        client.company_name = data["company_name"]
+
+    if "contact_person" in data:
+        client.contact_person = data["contact_person"]
+
+    if "email" in data:
+        client.email = data["email"]
+
+    if "phone" in data:
+        client.phone = data["phone"]
+
+    if "website" in data:
+        client.website = data["website"]
+
+    if "address" in data:
+        client.address = data["address"]
+
+    if "industry" in data:
+        client.industry = data["industry"]
+
+    if "status" in data:
+        client.status = data["status"]
+
+    try:
+        db.session.commit()
+
+        return {
+            "success": True,
+            "message": "Client updated successfully.",
+            "client": client.to_dict()
+        }
+
+    except Exception:
+        db.session.rollback()
+
+        return {
+            "success": False,
+            "message": "Failed to update client."
+        }
