@@ -12,6 +12,8 @@ def create_app():
 
     from app.models.user import User
     from app.models.client import Client
+    from app.models.company_settings import CompanySettings
+    from app.routes.company_settings_routes import company_settings_bp
 
     from app.routes.auth_routes import auth_bp
     from app.routes.user_routes import user_bp
@@ -19,5 +21,6 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(user_bp)
     app.register_blueprint(client_bp)
+    app.register_blueprint(company_settings_bp)
 
     return app
