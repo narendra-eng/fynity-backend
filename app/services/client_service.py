@@ -122,4 +122,30 @@ def update_client(client_id: str, data: dict) -> dict:
         return {
             "success": False,
             "message": "Failed to update client."
+        }    
+    
+def delete_client(client_id: str) -> dict:
+    client = Client.query.get(client_id)
+
+    if not client:
+        return {
+            "success": False,
+            "message": "Client not found."
+        }
+
+    try:
+        db.session.delete(client)
+        db.session.commit()
+
+        return {
+            "success": True,
+            "message": "Client deleted successfully."
+        }
+
+    except Exception:
+        db.session.rollback()
+
+        return {
+            "success": False,
+            "message": "Failed to delete client."
         }
