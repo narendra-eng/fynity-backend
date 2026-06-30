@@ -19,11 +19,17 @@ class Client(db.Model):
     )
     
     project_milestones = db.relationship(
-    "ProjectMilestone",
-    backref="client",
-    lazy=True,
-    cascade="all, delete-orphan"
-)
+        "ProjectMilestone",
+        backref="client",
+        lazy=True,
+        cascade="all, delete-orphan"
+    )
+    invoices = db.relationship(
+        "Invoice",
+        backref="client",
+        lazy=True,
+        cascade="all, delete-orphan"
+    )
 
     company_name = db.Column(db.String(255), nullable=False)
 

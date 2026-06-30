@@ -5,6 +5,8 @@ from app.models.workshop import Workshop
 from app.models.mentorship_student import MentorshipStudent
 from app.models.project_milestone import ProjectMilestone
 from app.models.project_update import ProjectUpdate
+from app.models.invoice import Invoice
+from app.models.invoice_line_item import InvoiceLineItem
 
 def create_app():
     app = Flask(__name__)
@@ -24,6 +26,8 @@ def create_app():
     from app.routes.mentorship_student_routes import mentorship_student_bp
     from app.routes.project_milestone_routes import project_milestone_bp
     from app.routes.project_update_routes import project_update_bp
+    from app.routes.invoice_routes import invoice_bp
+    from app.routes.invoice_line_item_routes import invoice_line_item_bp
     
     
 
@@ -39,5 +43,7 @@ def create_app():
     app.register_blueprint(mentorship_student_bp)
     app.register_blueprint(project_milestone_bp)
     app.register_blueprint(project_update_bp)
+    app.register_blueprint(invoice_bp)
+    app.register_blueprint(invoice_line_item_bp)
 
     return app
