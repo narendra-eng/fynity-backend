@@ -4,6 +4,7 @@ from app.config.config import Config
 from app.models.workshop import Workshop
 from app.models.mentorship_student import MentorshipStudent
 from app.models.project_milestone import ProjectMilestone
+from app.models.project_update import ProjectUpdate
 
 def create_app():
     app = Flask(__name__)
@@ -22,6 +23,8 @@ def create_app():
     from app.routes.workshop_routes import workshop_bp
     from app.routes.mentorship_student_routes import mentorship_student_bp
     from app.routes.project_milestone_routes import project_milestone_bp
+    from app.routes.project_update_routes import project_update_bp
+    
     
 
     from app.routes.auth_routes import auth_bp
@@ -35,5 +38,6 @@ def create_app():
     app.register_blueprint(workshop_bp)
     app.register_blueprint(mentorship_student_bp)
     app.register_blueprint(project_milestone_bp)
+    app.register_blueprint(project_update_bp)
 
     return app
