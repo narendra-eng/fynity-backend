@@ -3,8 +3,8 @@ import uuid
 from sqlalchemy.sql import func
 
 
-class Client(db.Model):
-    __tablename__ = "clients"
+class MentorshipStudent(db.Model):
+    __tablename__ = "mentorship_students"
 
     id = db.Column(
         db.String(36),
@@ -12,32 +12,17 @@ class Client(db.Model):
         default=lambda: str(uuid.uuid4())
     )
 
-    user_id = db.Column(
-        db.String(36),
-        db.ForeignKey("users.id"),
-        nullable=False
-    )
-    
-    project_milestones = db.relationship(
-    "ProjectMilestone",
-    backref="client",
-    lazy=True,
-    cascade="all, delete-orphan"
-)
-
-    company_name = db.Column(db.String(255), nullable=False)
-
-    contact_person = db.Column(db.String(150), nullable=False)
+    full_name = db.Column(db.String(255), nullable=False)
 
     email = db.Column(db.String(255), unique=True, nullable=False)
 
     phone = db.Column(db.String(20), nullable=False)
 
-    website = db.Column(db.String(255), nullable=True)
+    college = db.Column(db.String(255), nullable=False)
 
-    address = db.Column(db.Text, nullable=True)
+    course = db.Column(db.String(255), nullable=False)
 
-    industry = db.Column(db.String(100), nullable=True)
+    year = db.Column(db.Integer, nullable=False)
 
     status = db.Column(
         db.String(20),
@@ -61,14 +46,12 @@ class Client(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "user_id": self.user_id,
-            "company_name": self.company_name,
-            "contact_person": self.contact_person,
+            "full_name": self.full_name,
             "email": self.email,
             "phone": self.phone,
-            "website": self.website,
-            "address": self.address,
-            "industry": self.industry,
+            "college": self.college,
+            "course": self.course,
+            "year": self.year,
             "status": self.status,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None
