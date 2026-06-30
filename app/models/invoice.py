@@ -70,6 +70,13 @@ class Invoice(db.Model):
         lazy=True,
         cascade="all, delete-orphan"
     )
+    
+    payments = db.relationship(
+        "Payment",
+        backref="invoice",
+        lazy=True,
+        cascade="all, delete-orphan"
+    )
 
     def to_dict(self):
         return {

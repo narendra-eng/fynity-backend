@@ -7,6 +7,7 @@ from app.models.project_milestone import ProjectMilestone
 from app.models.project_update import ProjectUpdate
 from app.models.invoice import Invoice
 from app.models.invoice_line_item import InvoiceLineItem
+from app.models.payment import Payment
 
 def create_app():
     app = Flask(__name__)
@@ -28,6 +29,8 @@ def create_app():
     from app.routes.project_update_routes import project_update_bp
     from app.routes.invoice_routes import invoice_bp
     from app.routes.invoice_line_item_routes import invoice_line_item_bp
+    from app.routes.payment_routes import payment_bp
+    
     
     
 
@@ -45,5 +48,6 @@ def create_app():
     app.register_blueprint(project_update_bp)
     app.register_blueprint(invoice_bp)
     app.register_blueprint(invoice_line_item_bp)
+    app.register_blueprint(payment_bp)
 
     return app
