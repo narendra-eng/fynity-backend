@@ -8,6 +8,9 @@ from app.models.project_update import ProjectUpdate
 from app.models.invoice import Invoice
 from app.models.invoice_line_item import InvoiceLineItem
 from app.models.payment import Payment
+from app.models.audit_log import AuditLog
+from app.models.document import Document
+from flasgger import Swagger
 
 def create_app():
     app = Flask(__name__)
@@ -30,6 +33,8 @@ def create_app():
     from app.routes.invoice_routes import invoice_bp
     from app.routes.invoice_line_item_routes import invoice_line_item_bp
     from app.routes.payment_routes import payment_bp
+    from app.routes.dashboard_routes import dashboard_bp
+    from app.routes.document_routes import document_bp
     
     
     
@@ -49,5 +54,9 @@ def create_app():
     app.register_blueprint(invoice_bp)
     app.register_blueprint(invoice_line_item_bp)
     app.register_blueprint(payment_bp)
+    app.register_blueprint(dashboard_bp)
+    app.register_blueprint(document_bp)
+    
+    swagger = Swagger(app)
 
     return app

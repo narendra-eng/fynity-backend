@@ -1,5 +1,9 @@
 from app.extensions import db
 from app.models.client import Client
+from app.services.audit_log_service import create_audit_log
+from math import ceil
+from sqlalchemy import or_
+from sqlalchemy import or_, asc, desc
 
 def create_client(
     user_id: str,
@@ -34,6 +38,13 @@ def create_client(
     try:
         db.session.add(client)
         db.session.commit()
+        
+        create_audit_log(
+        user_id=user_id,
+        action="CREATE",
+        module="CLIENT",
+        description=f"Client '{company_name}' created."
+    )
 
         return {
             "success": True,
@@ -50,13 +61,55 @@ def create_client(
         }
     
     
-def get_all_clients() -> dict:
-    clients = Client.query.all()
+from sqlalchemy import or_
+
+def get_all_clients(page=1, limit=10, search=None, sort=None):
+
+    query = Client.query
+
+    if search:
+        query = query.filter(
+            or_(
+                Client.company_name.ilike(f"%{search}%"),
+                Client.contact_person.ilike(f"%{search}%"),
+                Client.email.ilike(f"%{search}%"),
+                Client.industry.ilike(f"%{search}%")
+            )
+        )
+
+    if sort:
+
+        if sort.startswith("-"):
+            field = sort[1:]
+
+            if hasattr(Client, field):
+                query = query.order_by(
+                    desc(getattr(Client, field))
+                )
+
+        else:
+
+            if hasattr(Client, sort):
+                query = query.order_by(
+                    asc(getattr(Client, sort))
+                )
+
+    pagination = query.paginate(
+        page=page,
+        per_page=limit,
+        error_out=False
+    )
 
     return {
         "success": True,
-        "count": len(clients),
-        "clients": [client.to_dict() for client in clients]
+        "page": page,
+        "limit": limit,
+        "total": pagination.total,
+        "total_pages": pagination.pages,
+        "clients": [
+            client.to_dict()
+            for client in pagination.items
+        ]
     }
     
 

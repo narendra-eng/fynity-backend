@@ -63,6 +63,13 @@ class Client(db.Model):
         onupdate=func.now(),
         nullable=False
     )
+    
+    documents = db.relationship(
+        "Document",
+        backref="client",
+        lazy=True,
+        cascade="all, delete-orphan"
+)
 
     def to_dict(self):
         return {
