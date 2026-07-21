@@ -2,6 +2,7 @@ from app.extensions import db
 from app.models.invoice import Invoice
 from app.models.client import Client
 from datetime import datetime
+from sqlalchemy import or_, asc, desc
 
 
 def create_invoice(
@@ -74,16 +75,58 @@ def create_invoice(
         }
 
 
-def get_all_invoices():
+def get_all_invoices(
+    page=1,
+    limit=10,
+    search=None,
+    sort=None
+):
 
-    invoices = Invoice.query.all()
+    query = Invoice.query
+
+    # Search
+    if search:
+        query = query.filter(
+            or_(
+                Invoice.invoice_number.ilike(f"%{search}%"),
+                Invoice.status.ilike(f"%{search}%"),
+                Invoice.notes.ilike(f"%{search}%")
+            )
+        )
+
+    # Sorting
+    if sort:
+
+        if sort.startswith("-"):
+            field = sort[1:]
+
+            if hasattr(Invoice, field):
+                query = query.order_by(
+                    desc(getattr(Invoice, field))
+                )
+
+        else:
+
+            if hasattr(Invoice, sort):
+                query = query.order_by(
+                    asc(getattr(Invoice, sort))
+                )
+
+    pagination = query.paginate(
+        page=page,
+        per_page=limit,
+        error_out=False
+    )
 
     return {
         "success": True,
-        "count": len(invoices),
+        "page": page,
+        "limit": limit,
+        "total": pagination.total,
+        "total_pages": pagination.pages,
         "invoices": [
             invoice.to_dict()
-            for invoice in invoices
+            for invoice in pagination.items
         ]
     }
 

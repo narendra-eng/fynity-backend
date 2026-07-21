@@ -55,7 +55,7 @@ class ProjectMilestone(db.Model):
         lazy=True,
         cascade="all, delete-orphan"
     )
-
+    
     def to_dict(self):
         return {
             "id": self.id,

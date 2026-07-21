@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.middleware.role_required import role_required
 
 from app.services.client_service import (
@@ -30,12 +30,11 @@ def create_client_route():
         }), 400
 
     required_fields = [
-        "user_id",
-        "company_name",
-        "contact_person",
-        "email",
-        "phone"
-    ]
+      "company_name",
+      "contact_person",
+      "email",
+      "phone"
+   ]
 
     for field in required_fields:
         if not data.get(field):
@@ -44,15 +43,17 @@ def create_client_route():
                 "message": f"{field} is required."
             }), 400
 
+    user_id = get_jwt_identity()
+
     result = create_client(
-        user_id=data["user_id"],
-        company_name=data["company_name"],
-        contact_person=data["contact_person"],
-        email=data["email"],
-        phone=data["phone"],
-        website=data.get("website"),
-        address=data.get("address"),
-        industry=data.get("industry")
+       user_id=user_id,
+       company_name=data["company_name"],
+       contact_person=data["contact_person"],
+       email=data["email"],
+       phone=data["phone"],
+       website=data.get("website"),
+       address=data.get("address"),
+       industry=data.get("industry")
     )
 
     if not result["success"]:

@@ -149,3 +149,5 @@ def delete_workshop(workshop_id: str) -> dict:
             "success": False,
             "message": "Failed to delete workshop."
         }
+        
+        

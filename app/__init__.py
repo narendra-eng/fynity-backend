@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, app
 from app.extensions import db, migrate, jwt
 from app.config.config import Config
 from app.models.workshop import Workshop
@@ -11,10 +11,16 @@ from app.models.payment import Payment
 from app.models.audit_log import AuditLog
 from app.models.document import Document
 from flasgger import Swagger
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    CORS(
+    app,
+    resources={r"/*": {"origins": "http://localhost:3000"}},
+    supports_credentials=True
+    )
 
     db.init_app(app)
     migrate.init_app(app, db)
